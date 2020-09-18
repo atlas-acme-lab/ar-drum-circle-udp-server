@@ -9,18 +9,19 @@ server.on('error',function(error){
 });
 // emits on new datagram msg
 server.on('message', function(msg, info){
-    console.log('Data received from client : ' + msg.toString());
-    console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
-    setTimeout(()=> {
+  console.log('Data received from client : ' + msg.toString());
+  console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
+
+  setTimeout(()=> {
     //sending msg
     server.send(msg, info.port, info.address, function(error){
-        if(error){
-            client.close();
-        }else{
-            console.log('Data sent !!!');
-        }
+      if(error){
+        client.close();
+      }else{
+        console.log('Data sent !!!');
+      }
     });
-  }, 10000);
+  }, 500);
 });
 //emits when socket is ready and listening for datagram msgs
 server.on('listening',function(){
