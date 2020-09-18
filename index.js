@@ -1,5 +1,6 @@
 var udp = require('dgram');
 // --------------------creating a udp server --------------------
+var port = process.env.PORT || 8888;
 // creating a udp server
 var server = udp.createSocket('udp4');
 // emits when any error occurs
@@ -7,22 +8,24 @@ server.on('error',function(error){
   console.log('Error: ' + error);
   server.close();
 });
+
 // emits on new datagram msg
 server.on('message', function(msg, info){
   console.log('Data received from client : ' + msg.toString());
-  console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
+  console.log('Received %d bytes from %s:%d\n', msg.length, info.address, info.port);
 
   setTimeout(()=> {
     //sending msg
     server.send(msg, info.port, info.address, function(error){
-      if(error){
+      if (error) {
         client.close();
-      }else{
+      } else {
         console.log('Data sent !!!');
       }
     });
   }, 500);
 });
+
 //emits when socket is ready and listening for datagram msgs
 server.on('listening',function(){
   var address = server.address();
@@ -33,11 +36,13 @@ server.on('listening',function(){
   console.log('Server ip :' + ipaddr);
   console.log('Server is IP4/IP6 : ' + family);
 });
+
 //emits after the socket is closed using socket.close();
 server.on('close',function(){
   console.log('Socket is closed !');
 });
-server.bind(8888);
+server.bind(port);
+
 process.on('SIGINT', function() {
   server.close();
 });
